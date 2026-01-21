@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify, session, redirect
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
-from google.auth.transport.requests import Request
 from models import User
 from database import db
 import os
@@ -11,8 +10,9 @@ from functools import wraps
 # Load environment variables
 load_dotenv()
 
-# Allow HTTP for local development (REMOVE IN PRODUCTION)
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+# Allow HTTP for local development only
+if os.environ.get('FLASK_ENV') != 'production':
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
