@@ -1,0 +1,31 @@
+# Backend
+backend/__pycache__/
+backend/routes/__pycache__/
+backend/venv/
+backend/*.pyc
+backend/*.db
+backend/instance/
+backend/.env
+
+# Frontend
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

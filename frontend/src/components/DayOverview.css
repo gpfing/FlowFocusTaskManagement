@@ -1,0 +1,101 @@
+.day-overview {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.overview-header h2 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.overview-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.time-card, .next-task-card {
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.time-card h3, .next-task-card h3 {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.time-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.time-label {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.capacity-status {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.status-ok {
+  color: #34a853;
+}
+
+.status-over {
+  color: #ea4335;
+}
+
+.task-title {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.task-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.priority {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.priority-high {
+  background-color: #fee;
+  color: #c00;
+}
+
+.priority-medium {
+  background-color: #fff4e6;
+  color: #e65100;
+}
+
+.priority-low {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.no-data {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
