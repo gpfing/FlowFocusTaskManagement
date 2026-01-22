@@ -7,16 +7,11 @@ from googleapiclient.discovery import build
 from routes.auth import login_required
 import json
 import os
-from dotenv import load_dotenv
 from zoneinfo import ZoneInfo
-
-# Load environment variables
-load_dotenv()
 
 bp = Blueprint('calendar', __name__, url_prefix='/api/calendar')
 
 def get_user_credentials(user):
-    """Helper function to get Google credentials for a user"""
     return Credentials(
         token=user.access_token,
         refresh_token=user.refresh_token,
@@ -29,7 +24,6 @@ def get_user_credentials(user):
 @bp.route('/sync', methods=['POST'])
 @login_required
 def sync_calendar():
-    """Sync calendar events and calculate available time for today"""
     user_id = session['user_id']
     user = User.query.get(user_id)
     
@@ -40,17 +34,14 @@ def sync_calendar():
         credentials = get_user_credentials(user)
         service = build('calendar', 'v3', credentials=credentials)
         
-        # Get today's date range (9 AM - 5 PM) in the user's local timezone
-        # Use Central Time (CT) as the timezone - adjust based on your location
-        local_tz = ZoneInfo('America/Chicago')  # Central Time
+        work_start_hour = user.work_start_hour if user.work_start_hour is not None else 9
+        work_end_hour = user.work_end_hour if user.work_end_hour is not None else 17
+        
+        local_tz = ZoneInfo('America/Chicago')
         today = date.today()
+        start_time = datetime.combine(today, datetime.min.time().replace(hour=work_start_hour)).replace(tzinfo=local_tz)
+        end_time = datetime.combine(today, datetime.min.time().replace(hour=work_end_hour)).replace(tzinfo=local_tz)
         
-        # Create timezone-aware datetimes for 9 AM and 5 PM local time
-        start_time = datetime.combine(today, datetime.min.time().replace(hour=9)).replace(tzinfo=local_tz)
-        end_time = datetime.combine(today, datetime.min.time().replace(hour=17)).replace(tzinfo=local_tz)
-        
-        # Fetch events from Google Calendar
-        # Google Calendar API expects RFC3339 format with timezone
         events_result = service.events().list(
             calendarId='primary',
             timeMin=start_time.isoformat(),
@@ -69,16 +60,12 @@ def sync_calendar():
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['end'].get('date'))
             
-            if 'T' in start:  # Only process timed events
+            if 'T' in start:
                 start_dt = datetime.fromisoformat(start.replace('Z', '+00:00'))
                 end_dt = datetime.fromisoformat(end.replace('Z', '+00:00'))
                 
-                # Clamp to work hours
-                work_start = start_time
-                work_end = end_time
-                
-                event_start = max(start_dt, work_start)
-                event_end = min(end_dt, work_end)
+                event_start = max(start_dt, start_time)
+                event_end = min(end_dt, end_time)
                 
                 if event_start < event_end:
                     duration = (event_end - event_start).total_seconds() / 60
@@ -90,16 +77,16 @@ def sync_calendar():
                         'end': event_end.isoformat()
                     })
         
-        total_minutes = 480  # 8 hours
+        total_minutes = (work_end_hour - work_start_hour) * 60
         available_minutes = max(0, total_minutes - int(busy_minutes))
         
-        # Check if sync for today already exists
         sync = CalendarSync.query.filter_by(
             user_id=user_id,
             sync_date=today
         ).first()
         
         if sync:
+            sync.total_minutes = total_minutes
             sync.available_minutes = available_minutes
             sync.events_json = json.dumps(event_list)
         else:

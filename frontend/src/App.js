@@ -28,7 +28,6 @@ function App() {
             const response = await authAPI.getCurrentUser();
             setUser(response.data);
           } catch (retryError) {
-            console.error('Auth check failed after OAuth:', retryError);
             setUser(null);
           } finally {
             setLoading(false);
@@ -46,7 +45,7 @@ function App() {
       await authAPI.logout();
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      setUser(null);
     }
   };
 

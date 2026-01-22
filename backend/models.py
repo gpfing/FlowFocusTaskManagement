@@ -11,9 +11,10 @@ class User(db.Model):
     access_token = db.Column(db.Text)
     refresh_token = db.Column(db.Text)
     token_expiry = db.Column(db.DateTime)
+    work_start_hour = db.Column(db.Integer, default=9)
+    work_end_hour = db.Column(db.Integer, default=17)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
     tasks = db.relationship('Task', backref='user', lazy=True, cascade='all, delete-orphan')
     calendar_syncs = db.relationship('CalendarSync', backref='user', lazy=True, cascade='all, delete-orphan')
     
@@ -22,6 +23,8 @@ class User(db.Model):
             'id': self.id,
             'email': self.email,
             'name': self.name,
+            'work_start_hour': self.work_start_hour,
+            'work_end_hour': self.work_end_hour,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
@@ -33,7 +36,7 @@ class Task(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     duration_minutes = db.Column(db.Integer, default=30)
-    priority = db.Column(db.String(20), default='Medium')  # High, Medium, Low
+    priority = db.Column(db.String(20), default='Medium')
     completed = db.Column(db.Boolean, default=False)
     completed_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -57,9 +60,9 @@ class CalendarSync(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     sync_date = db.Column(db.Date, nullable=False)
-    total_minutes = db.Column(db.Integer, default=480)  # 8 hours (9 AM - 5 PM)
+    total_minutes = db.Column(db.Integer, default=480)
     available_minutes = db.Column(db.Integer)
-    events_json = db.Column(db.Text)  # Store meeting details as JSON
+    events_json = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def to_dict(self):

@@ -1,17 +1,30 @@
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+.task-section {
+  margin-bottom: 2rem;
 }
 
 .task-section h3 {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--bg-tertiary);
 }
 
 .no-tasks {
-  padding: 3rem;
+  padding: 4rem 2rem;
   text-align: center;
-  color: #999;
+  color: var(--text-tertiary);
+  font-size: 1.05rem;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--border-color);
 }

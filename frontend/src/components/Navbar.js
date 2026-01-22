@@ -1,7 +1,7 @@
 import React from 'react';
 import './Navbar.css';
 
-function Navbar({ user, onLogout }) {
+function Navbar({ user, onLogout, onSettings }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -9,6 +9,9 @@ function Navbar({ user, onLogout }) {
       </div>
       <div className="navbar-user">
         <span>{user.name || user.email}</span>
+        <button className="btn-icon" onClick={onSettings} title="Settings">
+          ⚙️
+        </button>
         <button className="btn btn-secondary" onClick={onLogout}>
           Logout
         </button>

@@ -8,7 +8,6 @@ function LoginPage() {
       const response = await authAPI.initiateGoogleAuth();
       window.location.href = response.data.auth_url;
     } catch (error) {
-      console.error('Login error:', error);
       alert('Failed to initiate Google login');
     }
   };

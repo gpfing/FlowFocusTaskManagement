@@ -7,16 +7,12 @@ import os
 from dotenv import load_dotenv
 from functools import wraps
 
-# Load environment variables
 load_dotenv()
 
-# Allow HTTP for local development only
 if os.environ.get('FLASK_ENV') != 'production':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-# Google OAuth configuration
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 REDIRECT_URI = os.environ.get('REDIRECT_URI', 'http://localhost:5000/auth/google/callback')
@@ -39,7 +35,6 @@ def login_required(f):
 
 @bp.route('/google', methods=['POST'])
 def google_auth():
-    """Initiate Google OAuth flow"""
     try:
         flow = Flow.from_client_config(
             {
@@ -67,7 +62,6 @@ def google_auth():
 
 @bp.route('/google/callback')
 def google_callback():
-    """Handle Google OAuth callback"""
     try:
         state = session.get('state')
         
@@ -88,12 +82,10 @@ def google_callback():
         flow.fetch_token(authorization_response=request.url)
         credentials = flow.credentials
         
-        # Get user info
         from googleapiclient.discovery import build
         user_info_service = build('oauth2', 'v2', credentials=credentials)
         user_info = user_info_service.userinfo().get().execute()
         
-        # Create or update user
         user = User.query.filter_by(google_id=user_info['id']).first()
         if not user:
             user = User(
@@ -113,11 +105,9 @@ def google_callback():
         
         db.session.commit()
         
-        # Store user_id in session
         session['user_id'] = user.id
         session.permanent = True
         
-        # Redirect to frontend with success
         return redirect(f'{FRONTEND_URL}/dashboard?auth=success')
     except Exception as e:
         return redirect(f'{FRONTEND_URL}/login?error={str(e)}')
@@ -125,7 +115,6 @@ def google_callback():
 @bp.route('/me')
 @login_required
 def get_current_user():
-    """Get currently authenticated user"""
     user = User.query.get(session['user_id'])
     if not user:
         return jsonify({'error': 'User not found'}), 404
@@ -133,6 +122,5 @@ def get_current_user():
 
 @bp.route('/logout', methods=['POST'])
 def logout():
-    """Logout current user"""
     session.clear()
     return jsonify({'message': 'Logged out successfully'})

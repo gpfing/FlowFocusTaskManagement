@@ -1,101 +1,154 @@
 .day-overview {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-secondary);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: box-shadow var(--transition-normal);
+  animation: fadeIn 0.5s ease 0.1s backwards;
+}
+
+.day-overview:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .overview-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--bg-tertiary);
 }
 
 .overview-header h2 {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .overview-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
 .time-card, .next-task-card {
-  padding: 1.5rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 1.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.time-card::before, .next-task-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  transition: width var(--transition-normal);
+}
+
+.time-card:hover, .next-task-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.time-card:hover::before, .next-task-card:hover::before {
+  width: 100%;
+  opacity: 0.05;
 }
 
 .time-card h3, .next-task-card h3 {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 .time-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-  margin: 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0.75rem 0;
+  letter-spacing: -0.02em;
 }
 
 .time-label {
-  color: #999;
-  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .capacity-status {
-  font-weight: bold;
-  margin-top: 0.5rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
 }
 
 .status-ok {
-  color: #34a853;
+  color: var(--success-color);
+  background-color: rgba(127, 182, 133, 0.1);
 }
 
 .status-over {
-  color: #ea4335;
+  color: var(--error-color);
+  background-color: var(--error-light);
 }
 
 .task-title {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-  color: #333;
+  font-size: 1.15rem;
+  margin: 0.75rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .task-meta {
   display: flex;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .priority {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: bold;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .priority-high {
-  background-color: #fee;
-  color: #c00;
+  background-color: var(--error-light);
+  color: var(--error-color);
 }
 
 .priority-medium {
-  background-color: #fff4e6;
-  color: #e65100;
+  background-color: var(--warning-light);
+  color: var(--warning-color);
 }
 
 .priority-low {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: rgba(127, 182, 133, 0.1);
+  color: var(--success-color);
 }
 
 .no-data {
-  padding: 2rem;
+  padding: 3rem;
   text-align: center;
-  color: #666;
+  color: var(--text-tertiary);
 }

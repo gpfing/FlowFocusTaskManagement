@@ -33,4 +33,10 @@ export const calendarAPI = {
   getTodayCalendar: () => api.get('/api/calendar/today'),
 };
 
+// Settings API
+export const settingsAPI = {
+  getWorkHours: () => api.get('/api/settings/work-hours'),
+  updateWorkHours: (workHours) => api.put('/api/settings/work-hours', workHours),
+};
+
 export default api;

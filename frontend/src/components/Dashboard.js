@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import DayOverview from './DayOverview';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
+import Settings from './Settings';
 import './Dashboard.css';
 
 function Dashboard({ user, onLogout }) {
@@ -12,6 +13,7 @@ function Dashboard({ user, onLogout }) {
   const [nextTask, setNextTask] = useState(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ function Dashboard({ user, onLogout }) {
       setEditingTask(null);
       setShowTaskForm(false);
     } catch (error) {
-      console.error('Error updating task:', error);
+
       alert('Failed to update task');
     }
   };
@@ -92,7 +94,7 @@ function Dashboard({ user, onLogout }) {
         await tasksAPI.deleteTask(id);
         await loadData();
       } catch (error) {
-        console.error('Error deleting task:', error);
+
         alert('Failed to delete task');
       }
     }
@@ -113,7 +115,7 @@ function Dashboard({ user, onLogout }) {
       setCalendarData(response.data);
       await loadData();
     } catch (error) {
-      console.error('Error syncing calendar:', error);
+
       alert('Failed to sync calendar');
     }
   };
@@ -128,13 +130,19 @@ function Dashboard({ user, onLogout }) {
     setEditingTask(null);
   };
 
+  const handleSettingsSave = async () => {
+    // Reload calendar data with new work hours
+    await handleSyncCalendar();
+    setShowSettings(false);
+  };
+
   if (loading) {
     return <div className="loading">Loading dashboard...</div>;
   }
 
   return (
     <div className="dashboard">
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar user={user} onLogout={onLogout} onSettings={() => setShowSettings(true)} />
       
       <div className="dashboard-content">
         <DayOverview 
@@ -165,6 +173,13 @@ function Dashboard({ user, onLogout }) {
           task={editingTask}
           onSave={editingTask ? (data) => handleUpdateTask(editingTask.id, data) : handleCreateTask}
           onClose={handleCloseForm}
+        />
+      )}
+
+      {showSettings && (
+        <Settings
+          onClose={() => setShowSettings(false)}
+          onSave={handleSettingsSave}
         />
       )}
     </div>

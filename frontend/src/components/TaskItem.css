@@ -2,35 +2,69 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  transition: box-shadow 0.2s;
+  padding: 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  background-color: var(--bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
 .task-item:hover {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+}
+
+.task-item:hover::before {
+  opacity: 1;
 }
 
 .task-item.completed {
-  opacity: 0.6;
+  opacity: 0.65;
+  background-color: var(--bg-tertiary);
+}
+
+.task-item.completed::before {
+  background: linear-gradient(180deg, var(--success-color) 0%, var(--secondary-color) 100%);
+  opacity: 1;
 }
 
 .task-item.completed .task-title {
   text-decoration: line-through;
+  color: var(--text-tertiary);
 }
 
 .task-main {
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   flex: 1;
 }
 
 .task-checkbox {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   cursor: pointer;
-  margin-top: 0.2rem;
+  margin-top: 0.15rem;
+  accent-color: var(--primary-color);
+  transition: transform var(--transition-fast);
+}
+
+.task-checkbox:hover {
+  transform: scale(1.1);
 }
 
 .task-content {
@@ -38,25 +72,33 @@
 }
 
 .task-title {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: #333;
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .task-description {
-  color: #666;
-  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .task-meta {
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   font-size: 0.85rem;
+  flex-wrap: wrap;
 }
 
 .duration {
-  color: #666;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  padding: 0.25rem 0.65rem;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
 }
 
 .task-actions {
